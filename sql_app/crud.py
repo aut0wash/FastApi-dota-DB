@@ -7,6 +7,12 @@ import schemas as schemas
 def get_match(db: Session, match_id: int):
     return schemas.Game.from_orm(db.query(models.Game).options(selectinload(models.Game.playerstats)).filter(models.Game.id == match_id).first())
 
+
+def get_hero(db: Session, hero_id: int):
+    print(1)
+    return db.query(models.HeroInfo).filter(models.HeroInfo.id == hero_id).first()
+
+
 def get_matchs(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Game).order_by(models.Game.id.desc()).offset(skip).limit(limit).all()
 
@@ -27,8 +33,7 @@ def get_playerstats(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.PlayerStat).offset(skip).limit(limit).all()
 
 def get_playerstats_for_specific_match(db: Session, match_id: int):
-    print(db.query(models.PlayerStat).filter(models.PlayerStat.match_id == match_id))
-    return db.query(models.PlayerStat).filter(models.PlayerStat.match_id == match_id).all()
+    return db.query(models.PlayerStat).order_by(models.PlayerStat.slot.asc()).filter(models.PlayerStat.match_id == match_id).all()
 
 
 def create_playerstats_for_game(db: Session, playerstats: schemas.PlayerStatCreate, match_id: int):

@@ -3,8 +3,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class HeroStatBase(BaseModel):
-    hero_id: int
-    hero_name : str
+    id: int
+    name : str
 
     class Config:
         orm_mode = True
@@ -31,7 +31,7 @@ class PlayerStat(PlayerStatBase):
     hero_id: int
     num_kills: int
     isRadiant: bool
-
+    heroinfos: HeroStatBase = {}
     class Config:
         orm_mode = True
 

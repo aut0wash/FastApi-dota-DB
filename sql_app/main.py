@@ -41,6 +41,15 @@ def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return matchs
 
 
+@app.get("/heros/{hero_id}", response_model=schemas.HeroStatBase)
+def read_heros(hero_id: int, db: Session = Depends(get_db)):
+    db_hero = crud.get_hero(db, hero_id=hero_id)
+    print(db_hero)
+    if db_hero is None:
+        raise HTTPException(status_code=404, detail="Hero not found")
+    return db_hero
+
+
 @app.get("/matches/{match_id}", response_model=schemas.Game)
 def read_game(match_id: int, db: Session = Depends(get_db)):
     db_game = crud.get_match(db, match_id=match_id)
@@ -50,9 +59,7 @@ def read_game(match_id: int, db: Session = Depends(get_db)):
 
 @app.get("/matches/{match_id}/players", response_model=List[schemas.PlayerStat])
 def read_playerstats_from_a_game(match_id: int, db: Session = Depends(get_db)):
-    print(match_id)
     players_stats = crud.get_playerstats_for_specific_match(db, match_id=match_id)
-    print(players_stats)
     if players_stats is None:
         raise HTTPException(status_code=404, detail="Stats not found for this game")
 
